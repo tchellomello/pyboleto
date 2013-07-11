@@ -387,6 +387,13 @@ class BoletoPDF(object):
             valorDocumento
         )
 
+        self.pdfCanvas.drawString(
+            0,
+            (((linhaInicial + 0) * self.heightLine - 1.3 * cm)) +
+            self.deltaTitle,
+            boletoDados.disclaimer
+        )
+
         self.pdfCanvas.setFont('Courier', 9)
         demonstrativo = boletoDados.demonstrativo[0:25]
         for i in range(len(demonstrativo)):

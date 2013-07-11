@@ -6,6 +6,7 @@ from pyboleto.bank.bradesco import BoletoBradesco
 from pyboleto.bank.caixa import BoletoCaixa
 from pyboleto.bank.bancodobrasil import BoletoBB
 from pyboleto.bank.santander import BoletoSantander
+from pyboleto.bank.banrisul import BoletoBanrisul
 from pyboleto.pdf import BoletoPDF
 import datetime
 
@@ -251,6 +252,47 @@ def print_caixa():
 def print_itau():
     pass
 
+def print_banrisul():
+    listaDadosBanrisul = []
+    for i in range(1):
+        d = BoletoBanrisul()
+        d.cedente = 'Empresa ACME LTDA'
+        d.cedente_endereco = "Rua Acme, 123 - Centro - Sao Paulo/SP - CEP: 12345-678"
+        ## dados utilizados na documentação oficial do Banrisul
+        ## http://banrisul.com.br/bob (página 38 e 41)
+        d.agencia_cedente = '1102'
+        d.conta_cedente = '9000150'
+        d.nosso_numero = '22832563'
+        d.numero_documento = '22832563'
+        d.valor_documento = 550.00
+        d.valor = 550.00
+
+        d.data_vencimento = datetime.date(2000,07,04)
+        d.data_documento = datetime.date(2000,07,04)
+        d.data_processamento = datetime.date(2000,07,04)
+
+        d.instrucoes = [
+            "- Linha 1",
+            "- Sr Caixa, cobrar multa de 2% após o vencimento",
+            "- Receber até 10 dias após o vencimento",
+            ]
+        d.demonstrativo = [
+            "- Serviço Teste R$ 550,00",
+            "- Total R$ 550,00",
+            ]
+
+        d.sacado = [
+            "Cliente Teste %d" % (i + 1),
+            "Rua Desconhecida, 00/0000 - Não Sei - Cidade - Cep. 00000-000",
+            ""
+            ]
+        listaDadosBanrisul.append(d)
+
+    boleto = BoletoPDF('boleto-banrisul-formato-normal-teste.pdf')
+    for i in range(len(listaDadosBanrisul)):
+        boleto.drawBoleto(listaDadoBanrisul[i])
+        boleto.nextPage()
+    boleto.save()
 
 def print_all():
     print "Pyboleto version: %s" % pyboleto.__version__
@@ -275,6 +317,9 @@ def print_all():
 
     print "Santander"
     print_santander()
+
+    print "Banrisul"
+    print_banrisul()
 
     print "----------------------------------"
     print "Ok"
